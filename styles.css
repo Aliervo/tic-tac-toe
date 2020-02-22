@@ -1,0 +1,79 @@
+html {
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-family: Megrim, monospace;
+  font-size: xx-large;
+  color: red;
+  position: fixed;
+  bottom: .5rem;
+  left: .5rem;
+  width: fit-content;
+  margin: 0;
+}
+
+.gameboard {
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  width: 100vmin;
+  height: 100vmin;
+  margin: 0;
+}
+
+.gamespace {
+  --grid-border: 1px solid red;
+}
+
+#a1 {
+  border-right: var(--grid-border);
+  border-top: var(--grid-border);
+}
+
+#a2 {
+  border: var(--grid-border);
+  border-left: 0;
+}
+
+#a3 {
+  border-bottom: var(--grid-border);
+  border-right: var(--grid-border);
+}
+
+#b1 {
+  border: var(--grid-border);
+  border-bottom: 0;
+}
+
+#b2 {
+  border: var(--grid-border);
+}
+
+#b3 {
+  border: var(--grid-border);
+  border-top: 0;
+}
+
+#c1 {
+  border-left: var(--grid-border);
+  border-top: var(--grid-border);
+}
+
+#c2 {
+  border: var(--grid-border);
+  border-right: 0;
+}
+
+#c3 {
+  border-bottom: var(--grid-border);
+  border-left: var(--grid-border);
+}
