@@ -25,13 +25,18 @@ h1 {
 .gameboard {
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  width: 100vmin;
-  height: 100vmin;
+  width: 90vmin;
+  height: 90vmin;
   margin: 0;
 }
 
 .gamespace {
   --grid-border: 1px solid red;
+  color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: bold 5rem Megrim, monospace;
 }
 
 #a1 {
