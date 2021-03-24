@@ -39,46 +39,46 @@ h1 {
   font: bold 5rem Megrim, monospace;
 }
 
-#a1 {
-  border-right: var(--grid-border);
-  border-top: var(--grid-border);
-}
-
-#a2 {
-  border: var(--grid-border);
-  border-left: 0;
-}
-
-#a3 {
+#space0 {
   border-bottom: var(--grid-border);
   border-right: var(--grid-border);
 }
 
-#b1 {
-  border: var(--grid-border);
-  border-bottom: 0;
-}
-
-#b2 {
-  border: var(--grid-border);
-}
-
-#b3 {
+#space1 {
   border: var(--grid-border);
   border-top: 0;
 }
 
-#c1 {
+#space2 {
+  border-bottom: var(--grid-border);
   border-left: var(--grid-border);
+}
+
+#space3 {
+  border: var(--grid-border);
+  border-left: 0;
+}
+
+#space4 {
+  border: var(--grid-border);
+}
+
+#space6 {
+  border-right: var(--grid-border);
   border-top: var(--grid-border);
 }
 
-#c2 {
+#space5 {
   border: var(--grid-border);
   border-right: 0;
 }
 
-#c3 {
-  border-bottom: var(--grid-border);
+#space7 {
+  border: var(--grid-border);
+  border-bottom: 0;
+}
+
+#space8 {
   border-left: var(--grid-border);
+  border-top: var(--grid-border);
 }
