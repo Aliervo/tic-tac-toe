@@ -1,25 +1,15 @@
-(function boardSetup() {
-  const BOARD = document.querySelector(".gameboard");
-  const CELL_NAMES = new Map([
-    [9,"a3"],[8,"b3"],[7,"c3"],
-    [6,"a2"],[5,"b2"],[4,"c2"],
-    [3,"a1"],[2,"b1"],[1,"c1"]
-  ]);
+(function domSetup() {
+  const board = document.querySelector(".gameboard");
 
-  for (let i = 9; i > 0; i--) {
-    const GAME_SPACE = document.createElement("div");
-    GAME_SPACE.classList.add("gamespace");
-    GAME_SPACE.setAttribute("id", CELL_NAMES.get(i));
-    GAME_SPACE.addEventListener("click", e => {takeTurn(gameBoard, PLAYERS,
-      e.target.id)});
-    BOARD.appendChild(GAME_SPACE);
+  for (let i = 0; i < 9; i++) {
+    const gameSpace = document.createElement("div");
+    gameSpace.classList.add("gamespace");
+    gameSpace.setAttribute("id", `space${i}`);
+    gameSpace.addEventListener("click", e => {
+      game.handleEvent(e.target.id);
+    });
+    board.appendChild(gameSpace);
   }
-})();
-
-const gameBoard = ( (a1=null, a2=null, a3=null,
-                     b1=null, b2=null, b3=null,
-                     c1=null, c2=null, c3=null) => {
-  return {a1, a2, a3, b1, b2, b3, c1, c2, c3};
 })();
 
 function playerFactory(name, symbol) {
@@ -27,43 +17,86 @@ function playerFactory(name, symbol) {
   return {name, symbol, setSymbol};
 }
 
-const PLAYERS = [playerFactory("p1", "X"), playerFactory("p2", "O")];
-
-function takeTurn(board, players, space) {
-  board[space] = board[space] ? board[space] : players[Object.values(board)
-    .filter(value => value === null).length % 2].symbol;
-  renderToBoard(board);
-  checkWin(board);
-}
-
-function renderToBoard(board) {
-  const SPACES = document.querySelectorAll(".gamespace");
-  for (let i = SPACES.length; i > 0; i--) {
-    const SPACE = SPACES[i - 1];
-    SPACE.textContent = board[SPACE.id];
+function gameFactory(playerOne, playerTwo) {
+  const players = [playerOne, playerTwo];
+  const board = Array(9);
+  let currentPlayer = players[0];
+  function turn(move) {
+    board[move[5]] = currentPlayer;
+    document.querySelector(`#${move}`).textContent = currentPlayer;
+    victoryCheck(move) ? endGame(currentPlayer) : currentPlayer = players[(players.indexOf(currentPlayer) + 1) % 2];
   }
+
+  function endGame(winner) {
+    currentPlayer = "ended";
+    winner === "Draw" ? console.log("It's a draw!") : console.log(`${winner} wins!`);
+  }
+
+  function handleEvent(gamespace) {
+    return board[gamespace[5]] || currentPlayer === "ended" ? null : turn(gamespace);
+  }
+
+  function victoryCheck(lastMove) {
+    if (board.filter(space => !!space).length < 5) {
+      return false;
+    } else {
+      let haveWinner;
+      switch (+lastMove[5]) {
+        case 0:
+          haveWinner = (board[0] === board[1] && board[1] === board[2] ||
+                        board[0] === board[3] && board[3] === board[6] ||
+                        board[0] === board[4] && board[4] === board[8] );
+          break;
+        case 1:
+          haveWinner = (board[1] === board[0] && board[1] === board[2] ||
+                        board[1] === board[4] && board[4] === board[7] );
+          break;
+        case 2:
+          haveWinner = (board[2] === board[1] && board[1] === board[0] ||
+                        board[2] === board[5] && board[5] === board[8] ||
+                        board[2] === board[4] && board[4] === board[6] );
+          break;
+        case 3:
+          haveWinner = (board[3] === board[0] && board[0] === board[6] ||
+                        board[3] === board[4] && board[4] === board[5] );
+          break;
+        case 4:
+          haveWinner = (board[4] === board[0] && board[0] === board[8] ||
+                        board[4] === board[1] && board[1] === board[7] ||
+                        board[4] === board[2] && board[2] === board[6] ||
+                        board[4] === board[3] && board[3] === board[5] );
+          break;
+        case 5:
+          haveWinner = (board[5] === board[2] && board[2] === board[8] ||
+                        board[5] === board[4] && board[4] === board[3] );
+          break;
+        case 6:
+          haveWinner = (board[6] === board[3] && board[3] === board[0] ||
+                        board[6] === board[4] && board[4] === board[2] ||
+                        board[6] === board[7] && board[7] === board[8] );
+          break;
+        case 7:
+          haveWinner = (board[7] === board[4] && board[4] === board[1] ||
+                        board[7] === board[6] && board[6] === board[8] );
+          break;
+        case 8:
+          haveWinner = (board[8] === board[5] && board[5] === board[2] ||
+                        board[8] === board[4] && board[4] === board[0] ||
+                        board[8] === board[7] && board[7] === board[6] );
+          break;
+      };
+      return !haveWinner && board.filter(space => !!space).length == 9 ? endGame("Draw") : haveWinner;
+    };
+  }
+
+  return {handleEvent};
 }
 
-function checkWin(board) {
-  const SYMBOL_ONE = Object.keys(board).filter(space => board[space] === "X");
-  const SYMBOL_TWO = Object.keys(board).filter(space => board[space] === "O");
-  const UNCLAIMED  = Object.keys(board).filter(space => board[space] === null);
-  const WIN_CONDITIONS = [["a1", "a2", "a3"],
-                          ["a1", "b1", "c1"],
-                          ["b1", "b2", "b3"],
-                          ["a2", "b2", "c2"],
-                          ["a1", "b2", "c3"],
-                          ["a3", "b2", "c1"],
-                          ["c1", "c2", "c3"],
-                          ["a3", "b3", "c3"]];
+let game = gameFactory("X", "O");
 
-  WIN_CONDITIONS.forEach(condition => {
-    if (condition.every(space => SYMBOL_ONE.includes(space))) {
-      console.log("X wins!");
-    } else if (condition.every(space => SYMBOL_TWO.includes(space))) {
-      console.log("O wins!");
-    } else if (UNCLAIMED.length === 0) {
-      console.log("Tie!");
-    }
-  });
-}
+/* Now I am thinking that I need a few objects for data storage.  A game object
+*  to hold the data for each indiviual game, including the players and the board,
+*  perhaps with a UUID so each game can be stored and retrieved.
+*  The AI will be handled by a funciton that simply returns a move.
+*  It seems most efficient to check for wins using firstIndexOf() to eliminate
+*  a few possibilities before brute force checking.*/
